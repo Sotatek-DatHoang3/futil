@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"futil/internal/checksum"
 	"github.com/spf13/cobra"
 
 	"futil/internal/linecount"
@@ -25,6 +26,7 @@ var versionCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(linecount.NewLinecountCmd())
+	rootCmd.AddCommand(checksum.NewChecksumCmd())
 }
 
 func main() {
