@@ -12,29 +12,28 @@ func HandleError(err error) {
 	os.Exit(1)
 }
 
-// OpenFileOrStdin mở file hoặc trả về os.Stdin nếu filename là "-"
+// OpenFileOrStdin open or return os.Stdin if file name is "-"
 func OpenFileOrStdin(filename string) (io.ReadCloser, error) {
 	if filename == "-" {
 		return os.Stdin, nil
 	}
 	file, err := os.Open(filename)
 	if err != nil {
-		return nil, fmt.Errorf("không thể mở file: %v", err)
+		return nil, fmt.Errorf("can not open file: %v", err)
 	}
 	return file, nil
 }
 
-// CheckFileExists kiểm tra xem file có tồn tại không
 func CheckFileExists(filename string) error {
 	if filename == "-" {
-		return nil // Cho phép đọc từ stdin
+		return nil
 	}
 	info, err := os.Stat(filename)
 	if os.IsNotExist(err) {
-		return fmt.Errorf("file không tồn tại: %s", filename)
+		return fmt.Errorf(" No such file: '%s'", filename)
 	}
 	if info.IsDir() {
-		return fmt.Errorf("%s là một thư mục, không phải file", filename)
+		return fmt.Errorf(" Expected file got directory: '%s'", filename)
 	}
 	return nil
 }
