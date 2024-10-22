@@ -4,9 +4,7 @@ import (
 	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha256"
-	"encoding/hex"
 	"hash"
-	"io"
 	"strings"
 	"testing"
 )
@@ -26,14 +24,11 @@ func TestCalculateAndPrintChecksum(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			reader := strings.NewReader(input)
-			h := tt.hashFunc()
-
-			_, err := io.Copy(h, reader)
+			got, err := calculateAndPrintChecksum(reader, tt.hashFunc())
 			if err != nil {
-				t.Fatalf("Không thể tính toán hash: %v", err)
+				t.Fatalf("calculateAndPrintChecksum() error = %v", err)
 			}
 
-			got := hex.EncodeToString(h.Sum(nil))
 			if got != tt.want {
 				t.Errorf("calculateAndPrintChecksum() = %v, want %v", got, tt.want)
 			}

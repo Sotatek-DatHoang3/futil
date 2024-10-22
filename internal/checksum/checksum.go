@@ -34,6 +34,10 @@ func runChecksum(cmd *cobra.Command, args []string) error {
 	useSHA1, _ := cmd.Flags().GetBool("sha1")
 	useSHA256, _ := cmd.Flags().GetBool("sha256")
 
+	if !useMD5 && !useSHA1 && !useSHA256 {
+		return fmt.Errorf("error: Please specify at least one checksum algorithm")
+	}
+
 	if err := utils.CheckFileExists(filename); err != nil {
 		return err
 	}
@@ -49,33 +53,33 @@ func runChecksum(cmd *cobra.Command, args []string) error {
 		}
 	}(reader)
 
+	var checksum string
 	if useMD5 {
-		if err := calculateAndPrintChecksum(reader, md5.New()); err != nil {
+		checksum, err = calculateAndPrintChecksum(reader, md5.New())
+		if err != nil {
 			return err
 		}
 	}
 	if useSHA1 {
-		if err := calculateAndPrintChecksum(reader, sha1.New()); err != nil {
+		checksum, err = calculateAndPrintChecksum(reader, sha1.New())
+		if err != nil {
 			return err
 		}
 	}
 	if useSHA256 {
-		if err := calculateAndPrintChecksum(reader, sha256.New()); err != nil {
+		checksum, err = calculateAndPrintChecksum(reader, sha256.New())
+		if err != nil {
 			return err
 		}
 	}
-
-	if !useMD5 && !useSHA1 && !useSHA256 {
-		return fmt.Errorf("error: Please specify at least one checksum algorithm")
-	}
-
+	fmt.Println(checksum)
 	return nil
 }
 
-func calculateAndPrintChecksum(r io.Reader, h hash.Hash) error {
+func calculateAndPrintChecksum(r io.Reader, h hash.Hash) (string, error) {
 	if _, err := io.Copy(h, r); err != nil {
-		return fmt.Errorf("error calculating checksum: %v", err)
+		return "", fmt.Errorf("error calculating checksum: %v", err)
 	}
-	fmt.Printf("%x\n", h.Sum(nil))
-	return nil
+	checksum := fmt.Sprintf("%x", h.Sum(nil))
+	return checksum, nil
 }
