@@ -25,3 +25,32 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: latest
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Test
+        run: go test -v ./...
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Build
+        run: go build -v -o futil ./cmd/futil
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: futil
+          path: futil

@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"futil/internal/utils"
-
 	"github.com/spf13/cobra"
+
+	"futil/internal/linecount"
+	"futil/internal/utils"
 )
 
 var rootCmd = &cobra.Command{
@@ -23,6 +24,7 @@ var versionCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(linecount.NewLinecountCmd())
 }
 
 func main() {
