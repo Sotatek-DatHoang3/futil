@@ -54,3 +54,20 @@ jobs:
         with:
           name: futil
           path: futil
+
+  release:
+    if: github.event_name == 'release'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: futil
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: futil
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
