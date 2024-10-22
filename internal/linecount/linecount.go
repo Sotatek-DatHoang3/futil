@@ -18,8 +18,7 @@ func NewLinecountCmd() *cobra.Command {
 	}
 
 	cmd.Flags().StringP("file", "f", "", "the input file")
-	cmd.MarkFlagRequired("file")
-
+	_ = cmd.MarkFlagRequired("file")
 	return cmd
 }
 

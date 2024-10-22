@@ -14,7 +14,7 @@ func TestCheckFileExists(t *testing.T) {
 	defer func(name string) {
 		err := os.Remove(name)
 		if err != nil {
-
+			return
 		}
 	}(tmpfile.Name())
 
