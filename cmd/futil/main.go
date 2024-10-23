@@ -24,6 +24,7 @@ var versionCmd = &cobra.Command{
 }
 
 func init() {
+	rootCmd.Root().CompletionOptions.DisableDefaultCmd = true
 	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(linecount.NewLinecountCmd())
 	rootCmd.AddCommand(checksum.NewChecksumCmd())
